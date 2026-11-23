@@ -1,4 +1,4 @@
-
+from .models import PaymentAllocation
 from django.contrib import admin
 from .models import Payment
 
@@ -43,3 +43,34 @@ class PaymentAdmin(admin.ModelAdmin):
     )
 
     ordering = ("-created_at",)
+
+@admin.register(PaymentAllocation)
+class PaymentAllocationAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "payment",
+        "rent_charge",
+        "amount",
+        "created_at",
+    )
+
+    list_filter = ("created_at",)
+
+    search_fields = (
+        "payment__mpesa_receipt_number",
+        "payment__tenant__first_name",
+        "payment__tenant__last_name",
+        "rent_charge__description",
+    )
+
+    readonly_fields = ("created_at",)
+
+    def has_add_permission(self, request):
+        # Allocations should be created through the allocation service.
+        return False
+
+    def has_change_permission(self, request, obj=None):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

@@ -165,3 +165,65 @@ class Payment(models.Model):
             f"Payment {self.pk} - "
             f"KES {self.amount} - {self.status}"
         )
+
+class PaymentAllocation(models.Model):
+    """
+    Records how much of a successful payment has been applied
+    to a particular rent charge.
+    """
+
+    payment = models.ForeignKey(
+        "payments.Payment",
+        on_delete=models.PROTECT,
+        related_name="allocations",
+    )
+
+    rent_charge = models.ForeignKey(
+        "billing.RentCharge",
+        on_delete=models.PROTECT,
+        related_name="payment_allocations",
+    )
+
+    amount = models.DecimalField(
+        max_digits=12,
+        decimal_places=2,
+    )
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["created_at"]
+        constraints = [
+            models.UniqueConstraint(
+                fields=["payment", "rent_charge"],
+                name="unique_payment_rent_charge_allocation",
+            ),
+            models.CheckConstraint(
+                condition=models.Q(amount__gt=0),
+                name="payment_allocation_amount_positive",
+            ),
+        ]
+        indexes = [
+            models.Index(fields=["payment", "created_at"]),
+            models.Index(fields=["rent_charge", "created_at"]),
+        ]
+
+    def __str__(self):
+        return (
+            f"{self.payment} -> "
+            f"{self.rent_charge}: {self.amount}"
+        )
+
+    def clean(self):
+        super().clean()
+
+        if self.payment_id and self.rent_charge_id:
+            if self.payment.landlord_id != self.rent_charge.lease.tenant.landlord_id:
+                raise ValidationError(
+                    "Payment and rent charge must belong to the same landlord."
+                )
+
+            if self.payment.tenant_id != self.rent_charge.lease.tenant_id:
+                raise ValidationError(
+                    "Payment and rent charge must belong to the same tenant."
+                )
