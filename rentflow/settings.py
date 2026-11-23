@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'tenants',
     'leases',
     'billing',
+    'payments',
 ]
 
 MIDDLEWARE = [
@@ -146,3 +147,33 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+# Safaricom Daraja Configuration
+
+DARAJA_ENVIRONMENT = os.getenv(
+    "DARAJA_ENVIRONMENT", "sandbox"
+)
+
+DARAJA_CONSUMER_KEY = os.getenv(
+    "DARAJA_CONSUMER_KEY", ""
+)
+
+DARAJA_CONSUMER_SECRET = os.getenv(
+    "DARAJA_CONSUMER_SECRET", ""
+)
+
+DARAJA_SHORTCODE = os.getenv(
+    "DARAJA_SHORTCODE", ""
+)
+
+DARAJA_PASSKEY = os.getenv(
+    "DARAJA_PASSKEY", ""
+)
+
+DARAJA_CALLBACK_URL = os.getenv(
+    "DARAJA_CALLBACK_URL", ""
+)
+
+DARAJA_TRANSACTION_TYPE = os.getenv(
+    "DARAJA_TRANSACTION_TYPE", "CustomerPayBillOnline"
+)
