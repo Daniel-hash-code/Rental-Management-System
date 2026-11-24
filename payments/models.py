@@ -150,7 +150,9 @@ class Payment(models.Model):
                 )
 
         if self.lease_id:
-            if self.lease.landlord_id != self.landlord_id:
+            lease_landlord_id = self.lease.tenant.landlord_id
+
+            if lease_landlord_id != self.landlord_id:
                 raise ValidationError(
                     "The lease does not belong to this landlord account."
                 )

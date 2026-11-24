@@ -1,0 +1,706 @@
+{% extends "base.html" %}
+
+{% block title %}RentFlow | Discover Your Perfect Space{% endblock %}
+
+{% block content %}
+
+<!-- HERO SECTION -->
+<section class="hero-section">
+
+    <div class="container hero-content">
+
+        <div class="row">
+            <div class="col-lg-10">
+
+                <div class="hero-label">
+                    <i class="bi bi-buildings"></i>
+                    PROPERTY DISCOVERY MADE SIMPLE
+                </div>
+
+                <h1 class="hero-title fade-up">
+                    Find a place that
+                    <span>feels like home.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Discover apartments, residential houses and commercial
+                    spaces. Your next space is closer than you think.
+                </p>
+
+                <!-- INTERACTIVE CATEGORY SEARCH -->
+                <div class="hero-search">
+
+                    <form id="propertySearchForm">
+
+                        <div class="row g-2 align-items-center">
+
+                            <div class="col-lg-5 search-field">
+
+                                <label class="search-label" for="propertySearch">
+                                    WHAT ARE YOU LOOKING FOR?
+                                </label>
+
+                                <input
+                                    type="search"
+                                    id="propertySearch"
+                                    class="form-control"
+                                    placeholder="Apartment, office, house..."
+                                    autocomplete="off"
+                                >
+
+                            </div>
+
+                            <div class="col-lg-4 search-field">
+
+                                <label class="search-label" for="propertyType">
+                                    PROPERTY CATEGORY
+                                </label>
+
+                                <select id="propertyType" class="form-select">
+                                    <option value="all">All properties</option>
+                                    <option value="apartment">Apartments</option>
+                                    <option value="house">Houses</option>
+                                    <option value="commercial">Commercial</option>
+                                    <option value="retail">Retail spaces</option>
+                                </select>
+
+                            </div>
+
+                            <div class="col-lg-3">
+
+                                <button
+                                    type="submit"
+                                    class="btn btn-brand search-button"
+                                >
+                                    <i class="bi bi-search me-2"></i>
+                                    Explore spaces
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </form>
+
+                </div>
+
+                <p class="hero-note">
+                    <i class="bi bi-check-circle-fill me-1"></i>
+                    Explore residential and commercial spaces in one place.
+                </p>
+
+            </div>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- PROPERTY CATEGORIES -->
+<section class="section-padding" id="property-categories">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <div class="eyebrow">Explore possibilities</div>
+
+            <h2 class="section-heading">
+                Find the right space for you
+            </h2>
+
+            <p class="section-description mx-auto">
+                Whether you're searching for a new home or a place to grow
+                your business, explore different property categories.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4" id="categoryContainer">
+
+            <!-- APARTMENTS -->
+            <div class="col-md-6 col-lg-3 category-item"
+                 data-category="apartment"
+                 data-search="apartment apartments flats residential">
+
+                <a href="#featured-properties" class="text-decoration-none">
+
+                    <div class="category-card">
+
+                        <div class="category-image-wrapper">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800"
+                                alt="Modern apartment"
+                                class="category-image"
+                                loading="lazy"
+                            >
+
+                            <div class="category-icon">
+                                <i class="bi bi-building"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="category-body">
+
+                            <h5>Apartments</h5>
+
+                            <p>
+                                Discover comfortable apartments for modern living.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- HOUSES -->
+            <div class="col-md-6 col-lg-3 category-item"
+                 data-category="house"
+                 data-search="house houses homes villas family residential">
+
+                <a href="#featured-properties" class="text-decoration-none">
+
+                    <div class="category-card">
+
+                        <div class="category-image-wrapper">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800"
+                                alt="Modern residential house"
+                                class="category-image"
+                                loading="lazy"
+                            >
+
+                            <div class="category-icon">
+                                <i class="bi bi-house"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="category-body">
+
+                            <h5>Residential houses</h5>
+
+                            <p>
+                                Find a comfortable home for you and your family.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- COMMERCIAL -->
+            <div class="col-md-6 col-lg-3 category-item"
+                 data-category="commercial"
+                 data-search="commercial office offices business workspace">
+
+                <a href="#featured-properties" class="text-decoration-none">
+
+                    <div class="category-card">
+
+                        <div class="category-image-wrapper">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800"
+                                alt="Modern commercial office"
+                                class="category-image"
+                                loading="lazy"
+                            >
+
+                            <div class="category-icon">
+                                <i class="bi bi-briefcase"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="category-body">
+
+                            <h5>Commercial offices</h5>
+
+                            <p>
+                                Find professional spaces for your business.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+
+            <!-- RETAIL -->
+            <div class="col-md-6 col-lg-3 category-item"
+                 data-category="retail"
+                 data-search="retail shops shop storefront stores business">
+
+                <a href="#featured-properties" class="text-decoration-none">
+
+                    <div class="category-card">
+
+                        <div class="category-image-wrapper">
+
+                            <img
+                                src="https://images.unsplash.com/photo-1604719312566-8912e9c8a213?w=800"
+                                alt="Retail commercial space"
+                                class="category-image"
+                                loading="lazy"
+                            >
+
+                            <div class="category-icon">
+                                <i class="bi bi-shop"></i>
+                            </div>
+
+                        </div>
+
+                        <div class="category-body">
+
+                            <h5>Retail spaces</h5>
+
+                            <p>
+                                Discover shops and spaces for your next venture.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <div class="text-center mt-4 d-none" id="noCategories">
+            <p class="text-muted">
+                No matching categories found. Try another search.
+            </p>
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURED PROPERTY PREVIEW -->
+<section class="section-padding bg-white" id="featured-properties">
+
+    <div class="container">
+
+        <div class="row align-items-end mb-5">
+
+            <div class="col-lg-8">
+
+                <div class="eyebrow">Discover more</div>
+
+                <h2 class="section-heading">
+                    Spaces worth exploring
+                </h2>
+
+                <p class="section-description">
+                    Get inspired by the types of spaces you can discover
+                    through RentFlow.
+                </p>
+
+            </div>
+
+            <div class="col-lg-4 text-lg-end">
+                <span class="badge text-bg-light border p-2">
+                    Property listings coming soon
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="property-card">
+
+                    <div class="property-image-wrapper">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1600607687920-4e2a09cf159d?w=900"
+                            class="property-image"
+                            alt="Contemporary apartment living room"
+                            loading="lazy"
+                        >
+
+                        <span class="property-badge">
+                            Residential
+                        </span>
+
+                    </div>
+
+                    <div class="property-body">
+
+                        <h5 class="property-title">
+                            Modern apartment living
+                        </h5>
+
+                        <p class="property-location">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            Explore residential spaces
+                        </p>
+
+                        <div class="property-meta">
+                            <span>
+                                <i class="bi bi-house me-1"></i>
+                                Apartment
+                            </span>
+
+                            <span>
+                                <i class="bi bi-stars me-1"></i>
+                                Modern living
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="property-card">
+
+                    <div class="property-image-wrapper">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=900"
+                            class="property-image"
+                            alt="Contemporary family home"
+                            loading="lazy"
+                        >
+
+                        <span class="property-badge">
+                            Residential
+                        </span>
+
+                    </div>
+
+                    <div class="property-body">
+
+                        <h5 class="property-title">
+                            Contemporary family home
+                        </h5>
+
+                        <p class="property-location">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            Explore residential spaces
+                        </p>
+
+                        <div class="property-meta">
+                            <span>
+                                <i class="bi bi-house me-1"></i>
+                                House
+                            </span>
+
+                            <span>
+                                <i class="bi bi-stars me-1"></i>
+                                Spacious design
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-4">
+
+                <div class="property-card">
+
+                    <div class="property-image-wrapper">
+
+                        <img
+                            src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=900"
+                            class="property-image"
+                            alt="Contemporary office interior"
+                            loading="lazy"
+                        >
+
+                        <span class="property-badge">
+                            Commercial
+                        </span>
+
+                    </div>
+
+                    <div class="property-body">
+
+                        <h5 class="property-title">
+                            Professional office space
+                        </h5>
+
+                        <p class="property-location">
+                            <i class="bi bi-geo-alt me-1"></i>
+                            Explore commercial spaces
+                        </p>
+
+                        <div class="property-meta">
+                            <span>
+                                <i class="bi bi-briefcase me-1"></i>
+                                Office
+                            </span>
+
+                            <span>
+                                <i class="bi bi-stars me-1"></i>
+                                Business ready
+                            </span>
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+        <p class="text-muted small text-center mt-4">
+            These photographs are illustrative examples, not actual available
+            RentFlow properties. Real property listings will be connected
+            to the database in the next phase.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- PLATFORM FEATURES -->
+<section class="section-padding feature-section" id="how-it-works">
+
+    <div class="container">
+
+        <div class="text-center mb-5">
+
+            <div class="eyebrow">Why RentFlow?</div>
+
+            <h2 class="section-heading">
+                More than just finding a property
+            </h2>
+
+            <p class="section-description mx-auto">
+                A platform designed to simplify the entire rental experience
+                for tenants, landlords and property managers.
+            </p>
+
+        </div>
+
+
+        <div class="row g-4">
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-search"></i>
+                    </div>
+
+                    <h5>Easy discovery</h5>
+
+                    <p>
+                        Explore residential and commercial property categories
+                        through one platform.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-building-check"></i>
+                    </div>
+
+                    <h5>Property management</h5>
+
+                    <p>
+                        Organize properties, rental units, tenants and leases
+                        from one dashboard.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-phone"></i>
+                    </div>
+
+                    <h5>M-Pesa payments</h5>
+
+                    <p>
+                        Simplify rent payments through an integrated
+                        M-Pesa payment experience.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-md-6 col-lg-3">
+
+                <div class="feature-card">
+
+                    <div class="feature-icon">
+                        <i class="bi bi-bar-chart"></i>
+                    </div>
+
+                    <h5>Financial insights</h5>
+
+                    <p>
+                        Monitor rent collection, outstanding balances
+                        and rental performance.
+                    </p>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT -->
+<section class="section-padding" id="about">
+
+    <div class="container">
+
+        <div class="cta-section">
+
+            <div class="row align-items-center g-4">
+
+                <div class="col-lg-8">
+
+                    <div class="eyebrow text-success">
+                        For property owners
+                    </div>
+
+                    <h2>
+                        Manage your properties with confidence.
+                    </h2>
+
+                    <p class="mb-0">
+                        Bring your properties, tenants, rental units,
+                        leases and rent payments together in one organized
+                        management platform.
+                    </p>
+
+                </div>
+
+                <div class="col-lg-4 text-lg-end">
+
+                    <a href="{% url 'login' %}" class="btn btn-brand btn-lg">
+                        Start managing
+                        <i class="bi bi-arrow-right ms-2"></i>
+                    </a>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_js %}
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const searchForm = document.getElementById("propertySearchForm");
+    const searchInput = document.getElementById("propertySearch");
+    const propertyType = document.getElementById("propertyType");
+
+    const categoryItems = document.querySelectorAll(".category-item");
+    const noCategories = document.getElementById("noCategories");
+
+    searchForm.addEventListener("submit", function (event) {
+
+        event.preventDefault();
+
+        const query = searchInput.value.trim().toLowerCase();
+        const selectedType = propertyType.value;
+
+        let visibleCount = 0;
+
+        categoryItems.forEach(function (item) {
+
+            const category = item.dataset.category;
+            const keywords = item.dataset.search.toLowerCase();
+
+            const matchesType =
+                selectedType === "all" || category === selectedType;
+
+            const matchesSearch =
+                query === "" || keywords.includes(query);
+
+            const shouldDisplay = matchesType && matchesSearch;
+
+            item.classList.toggle("d-none", !shouldDisplay);
+
+            if (shouldDisplay) {
+                visibleCount++;
+            }
+
+        });
+
+        noCategories.classList.toggle("d-none", visibleCount > 0);
+
+        document.getElementById("property-categories").scrollIntoView({
+            behavior: "smooth"
+        });
+
+    });
+
+    // Re-filter immediately when category changes.
+    propertyType.addEventListener("change", function () {
+        searchForm.requestSubmit();
+    });
+
+});
+</script>
+
+{% endblock %}

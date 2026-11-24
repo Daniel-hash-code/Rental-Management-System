@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Invite a Tenant{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-7 col-lg-6">
+        <div class="card dashboard-card p-4">
+            <h2 class="fw-bold">Invite a tenant</h2>
+
+            <p class="text-muted">
+                Select an existing tenant profile from
+                {{ landlord.name }}.
+            </p>
+
+            {% if form.non_field_errors %}
+                <div class="alert alert-danger">
+                    {{ form.non_field_errors }}
+                </div>
+            {% endif %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">
+                        Tenant
+                    </label>
+
+                    {{ form.tenant }}
+
+                    {% for error in form.tenant.errors %}
+                        <div class="text-danger small">
+                            {{ error }}
+                        </div>
+                    {% endfor %}
+                </div>
+
+                <button class="btn btn-primary w-100">
+                    Send invitation
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

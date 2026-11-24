@@ -1,0 +1,110 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard | RentFlow{% endblock %}
+
+{% block content %}
+
+<h2 class="mb-2">Your Dashboard</h2>
+
+<p class="text-muted mb-4">
+    Select the RentFlow portal you want to access.
+</p>
+
+
+{% if user.is_superuser %}
+
+    <div class="card dashboard-card mb-4">
+        <div class="card-body">
+
+            <h5>Platform Administration</h5>
+
+            <p class="text-muted">
+                Manage the RentFlow platform.
+            </p>
+
+            <a href="{% url 'admin:index' %}" class="btn btn-dark">
+                Open Django Admin
+            </a>
+
+        </div>
+    </div>
+
+{% endif %}
+
+
+{% if tenant_profiles %}
+
+    <div class="card dashboard-card mb-4">
+
+        <div class="card-body">
+
+            <h5>Tenant Portal</h5>
+
+            <p class="text-muted">
+                View your rental information, outstanding rent,
+                and M-Pesa payments.
+            </p>
+
+            <a href="{% url 'tenants:dashboard' %}" class="btn btn-primary">
+                Open Tenant Dashboard
+            </a>
+
+        </div>
+
+    </div>
+
+{% endif %}
+
+
+{% if memberships %}
+
+    <h4 class="mb-3">Landlord Accounts</h4>
+
+    <div class="row">
+
+        {% for membership in memberships %}
+
+            <div class="col-md-6 col-lg-4 mb-3">
+
+                <div class="card dashboard-card h-100">
+
+                    <div class="card-body">
+
+                        <h5>
+                            {{ membership.landlord.name }}
+                        </h5>
+
+                        <p class="text-muted mb-2">
+                            Role: {{ membership.get_role_display }}
+                        </p>
+
+                        <a
+                            href="{% url 'landlord_dashboard' membership.landlord.slug %}"
+                            class="btn btn-outline-primary"
+                        >
+                            Open Account
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% endfor %}
+
+    </div>
+
+{% endif %}
+
+
+{% if not tenant_profiles and not memberships and not user.is_superuser %}
+
+    <div class="alert alert-info">
+        Your account is not currently linked to a tenant profile
+        or an active landlord account. Contact your administrator.
+    </div>
+
+{% endif %}
+
+{% endblock %}

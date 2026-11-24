@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Verification Link Invalid{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-7">
+        <div class="card dashboard-card p-5 text-center">
+            <h2 class="fw-bold">Verification link unavailable</h2>
+
+            <p class="text-muted">
+                This link may have expired or already been used.
+            </p>
+
+            <p>
+                If your account is still inactive, request another
+                verification email.
+            </p>
+
+            <a href="{% url 'login' %}"
+               class="btn btn-primary">
+                Return to sign in
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

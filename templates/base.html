@@ -1,0 +1,229 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="description" content="RentFlow helps you discover rental properties and manage your rental business with ease.">
+
+    <title>{% block title %}RentFlow | Find Your Space{% endblock %}</title>
+
+    <link
+        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+        rel="stylesheet"
+    >
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg rentflow-navbar sticky-top">
+    <div class="container">
+
+        <a class="navbar-brand rentflow-brand" href="{% url 'home' %}">
+            <span class="brand-icon">
+                <i class="bi bi-buildings"></i>
+            </span>
+            Rent<span>Flow</span>
+        </a>
+
+        <button
+            class="navbar-toggler"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#rentflowNavbar"
+            aria-controls="rentflowNavbar"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="rentflowNavbar">
+
+            <ul class="navbar-nav mx-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}">Home</a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#property-categories">
+                        Properties
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#how-it-works">
+                        How it works
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'home' %}#about">
+                        About
+                    </a>
+                </li>
+            </ul>
+
+            <div class="d-flex flex-column flex-lg-row align-items-lg-center gap-2">
+
+                {% if request.user.is_authenticated %}
+
+                    <a href="{% url 'dashboard' %}" class="btn btn-outline-light">
+                        Dashboard
+                    </a>
+
+                    <div class="dropdown">
+                        <button
+                            class="btn btn-brand dropdown-toggle"
+                            type="button"
+                            data-bs-toggle="dropdown"
+                            aria-expanded="false"
+                        >
+                            <i class="bi bi-person-circle me-1"></i>
+                            {{ request.user.username }}
+                        </button>
+
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="{% url 'dashboard' %}">
+                                    My account
+                                </a>
+                            </li>
+
+                            <li><hr class="dropdown-divider"></li>
+
+                            <li>
+                                <form method="POST" action="{% url 'logout' %}">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-outline-light">
+                                        <i class="bi bi-box-arrow-right me-2"></i>
+                                        Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+
+                {% else %}
+
+                    <a href="{% url 'login' %}" class="btn btn-outline-light">
+                        Sign in
+                    </a>
+
+                    <a href="{% url 'login' %}" class="btn btn-primary">
+                        Get started
+                        <i class="bi bi-arrow-right ms-1"></i>
+                    </a>
+
+                {% endif %}
+
+            </div>
+
+        </div>
+    </div>
+</nav>
+
+
+{% if messages %}
+<div class="container mt-3">
+
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show shadow-sm">
+            {{ message }}
+
+            <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="alert"
+                aria-label="Close"
+            ></button>
+        </div>
+    {% endfor %}
+
+</div>
+{% endif %}
+
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+
+<footer class="rentflow-footer">
+    <div class="container">
+
+        <div class="row g-4 py-5">
+
+            <div class="col-lg-4">
+                <a class="navbar-brand rentflow-brand footer-brand" href="{% url 'home' %}">
+                    <span class="brand-icon">
+                        <i class="bi bi-buildings"></i>
+                    </span>
+                    Rent<span>Flow</span>
+                </a>
+
+                <p class="footer-description mt-3">
+                    Making property discovery and rental management simpler,
+                    smarter and more convenient.
+                </p>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h6>Explore</h6>
+                <a href="{% url 'home' %}#property-categories">Apartments</a>
+                <a href="{% url 'home' %}#property-categories">Houses</a>
+                <a href="{% url 'home' %}#property-categories">Commercial</a>
+            </div>
+
+            <div class="col-6 col-lg-2">
+                <h6>Platform</h6>
+                <a href="{% url 'home' %}#how-it-works">How it works</a>
+                <a href="{% url 'login' %}">Tenant login</a>
+                <a href="{% url 'login' %}">Landlord login</a>
+            </div>
+
+            <div class="col-lg-4">
+                <h6>Manage your property</h6>
+                <p class="footer-description">
+                    Simplify rent collection, tenant management and property operations.
+                </p>
+
+                <a href="{% url 'login' %}" class="btn btn-brand">
+                    Get started <i class="bi bi-arrow-right ms-1"></i>
+                </a>
+            </div>
+
+        </div>
+
+        <div class="footer-bottom">
+            <small>
+                &copy; {% now "Y" %} RentFlow. All rights reserved.
+            </small>
+
+            <small>
+                Built for smarter property management.
+            </small>
+        </div>
+
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+{% block extra_js %}{% endblock %}
+
+</body>
+</html>

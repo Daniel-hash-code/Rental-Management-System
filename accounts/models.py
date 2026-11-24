@@ -1,5 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.conf import settings
+from django.utils import timezone
 
 
 class User(AbstractUser):
@@ -107,3 +109,69 @@ class Membership(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.landlord.name} ({self.role})"
+
+
+class EmailVerification(models.Model):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="email_verification",
+    )
+
+    token_hash = models.CharField(max_length=64, unique=True)
+    expires_at = models.DateTimeField()
+    verified_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return (
+            self.verified_at is None
+            and self.expires_at > timezone.now()
+        )
+
+    def __str__(self):
+        return f"Email verification: {self.user.email}"
+
+
+class TenantInvitation(models.Model):
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        ACCEPTED = "accepted", "Accepted"
+        EXPIRED = "expired", "Expired"
+        REVOKED = "revoked", "Revoked"
+
+    tenant = models.ForeignKey(
+        "tenants.Tenant",
+        on_delete=models.CASCADE,
+        related_name="invitations",
+    )
+
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.PROTECT,
+        related_name="sent_tenant_invitations",
+    )
+
+    email = models.EmailField()
+    token_hash = models.CharField(max_length=64, unique=True)
+
+    status = models.CharField(
+        max_length=20,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+
+    expires_at = models.DateTimeField()
+    accepted_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def is_valid(self):
+        return (
+            self.status == self.Status.PENDING
+            and self.expires_at > timezone.now()
+            and self.accepted_at is None
+        )
+
+    def __str__(self):
+        return f"Invitation for {self.email}"

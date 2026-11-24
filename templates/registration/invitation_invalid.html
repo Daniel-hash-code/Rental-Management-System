@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}Invitation Unavailable{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center py-5">
+    <div class="col-md-7">
+        <div class="card dashboard-card p-5 text-center">
+            <h2 class="fw-bold">Invitation unavailable</h2>
+
+            <p class="text-muted">
+                This invitation has expired, been revoked,
+                already been used, or is otherwise invalid.
+            </p>
+
+            <a href="{% url 'login' %}"
+               class="btn btn-primary">
+                Go to sign in
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

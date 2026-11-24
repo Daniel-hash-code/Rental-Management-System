@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .models import User, LandlordAccount, Membership
+from .models import User, LandlordAccount, Membership, EmailVerification, TenantInvitation
 
 
 @admin.register(User)
@@ -93,3 +93,63 @@ class MembershipAdmin(admin.ModelAdmin):
     )
 
     readonly_fields = ("joined_at",)
+
+
+@admin.register(EmailVerification)
+class EmailVerificationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "user",
+        "expires_at",
+        "verified_at",
+        "created_at",
+    )
+
+    search_fields = (
+        "user__email",
+        "user__username",
+    )
+
+    readonly_fields = (
+        "user",
+        "token_hash",
+        "expires_at",
+        "verified_at",
+        "created_at",
+    )
+
+
+@admin.register(TenantInvitation)
+class TenantInvitationAdmin(admin.ModelAdmin):
+
+    list_display = (
+        "tenant",
+        "email",
+        "invited_by",
+        "status",
+        "expires_at",
+        "accepted_at",
+    )
+
+    list_filter = (
+        "status",
+        "created_at",
+    )
+
+    search_fields = (
+        "email",
+        "tenant__first_name",
+        "tenant__last_name",
+        "tenant__landlord__name",
+    )
+
+    readonly_fields = (
+        "tenant",
+        "invited_by",
+        "email",
+        "token_hash",
+        "status",
+        "expires_at",
+        "accepted_at",
+        "created_at",
+    )
