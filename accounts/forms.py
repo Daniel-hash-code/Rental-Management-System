@@ -8,15 +8,17 @@ from tenants.models import Tenant
 
 User = get_user_model()
 
+class StyledFormMixin:
+    """Apply consistent Bootstrap styling to form fields."""
 
-class LandlordRegistrationForm(forms.Form):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-
+    def apply_bootstrap_classes(self):
         for field in self.fields.values():
-            field.widget.attrs.update({
-                "class": "form-control", "placeholder": field.label,
-            })
+            if isinstance(field.widget, forms.CheckboxInput):
+                field.widget.attrs["class"] = "form-check-input"
+            else:
+                existing = field.widget.attrs.get("class", "")
+                field.widget.attrs["class"] = f"{existing} form-control".strip()
+class LandlordRegistrationForm(StyledFormMixin, forms.Form):
     first_name = forms.CharField(max_length=150)
     last_name = forms.CharField(max_length=150)
 
@@ -24,7 +26,7 @@ class LandlordRegistrationForm(forms.Form):
 
     phone_number = forms.CharField(max_length=20)
 
-    business_name = forms.CharField(max_length=150)
+    landlord_name = forms.CharField(max_length=150, label="Business or landlord name")
 
     password = forms.CharField(
         widget=forms.PasswordInput,
@@ -33,8 +35,12 @@ class LandlordRegistrationForm(forms.Form):
 
     confirm_password = forms.CharField(
         widget=forms.PasswordInput,
-        strip=False,
+        strip=False, label="Confirm password",
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_bootstrap_classes()
 
     def clean_email(self):
         email = self.cleaned_data["email"].strip().lower()
@@ -59,12 +65,14 @@ class LandlordRegistrationForm(forms.Form):
             )
 
         if password:
-            password_validation.validate_password(password)
+            try:
+                password_validation.validate_password(password)
+            except forms.ValidationError as error:
+                self.add_error("password", error)
 
         return cleaned_data
 
-
-class TenantInvitationForm(forms.Form):
+class TenantInvitationForm(StyledFormMixin, forms.Form):
     
     tenant = forms.ModelChoiceField(
         queryset=Tenant.objects.none(),
@@ -80,22 +88,44 @@ class TenantInvitationForm(forms.Form):
                     landlord=landlord,
                     status=Tenant.Status.ACTIVE,
                     user__isnull=True,
-                ).order_by("first_name", "last_name")
+                )
+                .exclude(email="")
+                .order_by("first_name", "last_name")
             )
-        self.fields["tenant"].widget.attrs["class"] = "form-select"    
+        self.apply_bootstrap_classes()
+    def clean_tenant(self):
+        tenant = self.cleaned_data["tenant"]
+
+        if not tenant.email:
+            raise forms.ValidationError(
+                "This tenant does not have an email address."
+            )
+
+        if tenant.user_id:
+            raise forms.ValidationError(
+                "This tenant already has a login account."
+            )
+
+        return tenant
 
 
-class TenantInvitationAcceptanceForm(forms.Form):
+class TenantInvitationAcceptanceForm(StyledFormMixin, forms.Form):
 
     password = forms.CharField(
         widget=forms.PasswordInput,
         strip=False,
+        label="Create password",
     )
 
     confirm_password = forms.CharField(
         widget=forms.PasswordInput,
         strip=False,
+        label="Confirm password",
     )
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_bootstrap_classes()
 
     def clean(self):
         cleaned_data = super().clean()
@@ -110,6 +140,17 @@ class TenantInvitationAcceptanceForm(forms.Form):
             )
 
         if password:
-            password_validation.validate_password(password)
+            try:
+                password_validation.validate_password(password)
+            except forms.ValidationError as error:
+                self.add_error("password", error)
 
         return cleaned_data
+
+
+class ResendVerificationForm(StyledFormMixin, forms.Form):
+    email = forms.EmailField()
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.apply_bootstrap_classes()

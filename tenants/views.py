@@ -75,7 +75,6 @@ def tenant_dashboard(request):
 
     # Include payments initiated by other means or users,
     # provided they belong to one of this user's tenant profiles.
-    from payments.models import Payment
 
     recent_payments = (
         Payment.objects

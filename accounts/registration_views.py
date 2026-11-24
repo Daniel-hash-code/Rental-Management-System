@@ -12,6 +12,7 @@ from accounts.forms import (
     LandlordRegistrationForm,
     TenantInvitationForm,
     TenantInvitationAcceptanceForm,
+    ResendVerificationForm,
 )
 from accounts.models import (
     EmailVerification,
@@ -121,49 +122,62 @@ def verify_email(request, token):
 
 @require_POST
 def resend_verification(request):
-    email = request.POST.get("email", "").strip().lower()
+    if request.method == "POST":
+        form = ResendVerificationForm(request.POST)
 
-    user = User.objects.filter(
-        email__iexact=email,
-        role=User.Role.LANDLORD,
-        is_active=False,
-    ).first()
+        if form.is_valid():
+            email = form.cleaned_data["email"].strip().lower()
 
-    if user:
-        raw_token, token_hash = generate_token()
+            user = User.objects.filter(
+                email__iexact=email,
+                role=User.Role.LANDLORD,
+                is_active=False,
+            ).first()
 
-        verification, created = (
-            EmailVerification.objects.get_or_create(
-                user=user,
-                defaults={
-                    "token_hash": token_hash,
-                    "expires_at": (
+            if user:
+                raw_token, token_hash = generate_token()
+
+                verification = EmailVerification.objects.filter(
+                    user=user,
+                ).first()
+
+                if verification:
+                    verification.token_hash = token_hash
+                    verification.expires_at = (
                         timezone.now()
                         + timedelta(
                             seconds=settings.EMAIL_VERIFICATION_TIMEOUT
                         )
-                    ),
-                },
+                    )
+                    verification.verified_at = None
+                    verification.save()
+
+                else:
+                    EmailVerification.objects.create(
+                        user=user,
+                        token_hash=token_hash,
+                        expires_at=(
+                            timezone.now()
+                            + timedelta(
+                                seconds=settings.EMAIL_VERIFICATION_TIMEOUT
+                            )
+                        ),
+                    )
+
+                send_verification_email(user, raw_token)
+
+            return render(
+                request,
+                "registration/resend_verification_sent.html",
             )
-        )
 
-        if not created:
-            verification.token_hash = token_hash
-            verification.expires_at = (
-                timezone.now()
-                + timedelta(
-                    seconds=settings.EMAIL_VERIFICATION_TIMEOUT
-                )
-            )
-            verification.verified_at = None
-            verification.save()
+    else:
+        form = ResendVerificationForm()
 
-        send_verification_email(user, raw_token)
-
-    # Do not reveal whether an email address is registered.
     return render(
         request,
-        "registration/resend_verification_sent.html",
+        "registration/resend_verification.html",
+        {"form": form},
     )
 
 

@@ -17,10 +17,15 @@ from accounts.models import (
     Membership,
     TenantInvitation,
 )
+from tenants.models import Tenant
 
 
 User = get_user_model()
 
+class RegistrationError(Exception):
+    pass
+class ExistingAccountError(RegistrationError):
+    pass
 
 def generate_token():
     raw_token = secrets.token_urlsafe(48)
@@ -40,9 +45,11 @@ def hash_token(raw_token):
 def generate_username(email):
     base = slugify(email.split("@")[0])[:120] or "user"
     username = base
+    counter = 1
 
     while User.objects.filter(username=username).exists():
-        username = f"{base}-{get_random_string(8).lower()}"
+        counter += 1
+        username = f"{base[:135]}-{counter}"
 
     return username
 
@@ -77,8 +84,8 @@ def register_landlord(cleaned_data):
     user.save(update_fields=["password"])
 
     landlord = LandlordAccount.objects.create(
-        name=cleaned_data["business_name"],
-        slug=generate_unique_slug(cleaned_data["business_name"]),
+        name=cleaned_data["landlord_name"],
+        slug=generate_unique_slug(cleaned_data["landlord_name"]),
         created_by=user,
     )
 

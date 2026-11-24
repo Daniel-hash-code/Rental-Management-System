@@ -16,7 +16,10 @@
                 If your account is still inactive, request another
                 verification email.
             </p>
-
+            <a href="{% url 'resend_verification' %}"
+                class="btn btn-outline-primary mb-2">
+                Request a new verification link
+            </a>
             <a href="{% url 'login' %}"
                class="btn btn-primary">
                 Return to sign in
