@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/6.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.1/ref/settings/
 """
-
+import certifi
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -34,6 +34,20 @@ ALLOWED_HOSTS = [
     if host.strip()
 ]
 
+CSRF_TRUSTED_ORIGINS = [
+    origin.strip()
+    for origin in os.getenv("CSRF_TRUSTED_ORIGINS", "").split(",")
+    if origin.strip()
+]
+
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+
+SESSION_COOKIE_SECURE = not DEBUG
+CSRF_COOKIE_SECURE = not DEBUG
+
+SECURE_SSL_REDIRECT = (
+    os.getenv("SECURE_SSL_REDIRECT", "False").lower() == "true"
+)
 
 # Application definition
 
@@ -85,20 +99,27 @@ WSGI_APPLICATION = 'rentflow.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/6.1/ref/settings/#databases
+DB_HOST = os.getenv("DB_HOST") or os.getenv("MYSQLHOST", "127.0.0.1")
 
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASSWORD"),
-        "HOST": os.getenv("DB_HOST", "127.0.0.1"),
-        "PORT": os.getenv("DB_PORT", "3307"),
-        "OPTIONS": {
-            "charset": "utf8mb4",
-        },
+        "NAME": os.getenv("DB_NAME") or os.getenv("MYSQLDATABASE"),
+        "USER": os.getenv("DB_USER") or os.getenv("MYSQLUSER"),
+        "PASSWORD": os.getenv("DB_PASSWORD") or os.getenv("MYSQLPASSWORD"),
+        "HOST": DB_HOST,
+        "PORT": os.getenv("DB_PORT") or os.getenv("MYSQLPORT", "3307"),
+        "OPTIONS": {"charset": "utf8mb4"},
     }
 }
+
+# Require verified TLS for TiDB Cloud connections.
+if DB_HOST.endswith(".tidbcloud.com"):
+    DATABASES["default"]["OPTIONS"].update({
+        "ssl_ca": certifi.where(),
+        "ssl_verify_cert": True,
+        "ssl_verify_identity": True,
+    })
 
 
 # Password validation
