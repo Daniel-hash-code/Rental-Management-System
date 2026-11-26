@@ -224,3 +224,21 @@ DARAJA_CALLBACK_URL = os.getenv(
 DARAJA_TRANSACTION_TYPE = os.getenv(
     "DARAJA_TRANSACTION_TYPE", "CustomerPayBillOnline"
 )
+
+# Production error logging
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+        },
+    },
+    "loggers": {
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+    },
+}
